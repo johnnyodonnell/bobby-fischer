@@ -1,11 +1,15 @@
 package com.johnnybot;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by kingod180 on 11/24/2016.
@@ -26,6 +30,12 @@ public class UserInterface extends JPanel implements MouseListener, MouseMotionL
 
         graphics.setColor(Color.BLACK);
         graphics.fillRect(40, 40, 40, 40);
+
+        graphics.drawString("Bobby Fischer Chess Engine", x - 40, y - 20);
+
+        URL url = this.getClass().getResource("/static/ChessPieces.png");
+        Image chessPieceImage = new ImageIcon(url).getImage();
+        graphics.drawImage(chessPieceImage, x, y, x+64, y+64, 0, 0, 64, 64, this);
     }
 
 
