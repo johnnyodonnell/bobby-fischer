@@ -8,20 +8,20 @@ import javax.swing.JFrame;
 public class AlphaBetaChess {
 
     private static String board[][] = {
-            {"R","P"," "," "," "," ","p","r"},
-            {"K","P"," "," "," "," ","p","k"},
-            {"B","P"," "," "," "," ","p","b"},
-            {"Q","P"," "," "," "," ","p","q"},
-            {"A","P"," "," "," "," ","p","a"},
-            {"B","P"," "," "," "," ","p","b"},
-            {"K","P"," "," "," "," ","p","k"},
-            {"R","P"," "," "," "," ","p","r"}};
+            {"r","k","b","q","a","b","k","r"},
+            {"p","p","p","p","p","p","p","p"},
+            {" "," "," "," "," "," "," "," "},
+            {" "," "," "," "," "," "," "," "},
+            {" "," "," "," ","Q"," "," "," "},
+            {" "," "," "," "," "," "," "," "},
+            {"P","P","P","P","P","P","P","P"},
+            {"R","K","B","Q","A","B","K","R"}};
 
-    private static int cKingPositionX;
-    private static int cKingPositionY;
+    private static int cKingPositionR;
+    private static int cKingPositionC;
 
-    private static int lKingPositionX;
-    private static int lKingPositionY;
+    private static int lKingPositionR;
+    private static int lKingPositionC;
 
     public static void main(String[] args) {
         JFrame jFrame = new JFrame("Hello Bobby Fischer!");
@@ -34,26 +34,26 @@ public class AlphaBetaChess {
 
     public static String possibleMoves() {
         String list = "";
-        for (int x = 0; x < board.length; x++) {
-            for (int y = 0; y < board[x].length; y++) {
-                switch (board[x][y]) {
+        for (int r = 0; r < board.length; r++) {
+            for (int c = 0; c < board[r].length; c++) {
+                switch (board[r][c]) {
                     case "P":
-                        list += possibleP(x, y);
+                        list += possibleP(r, c);
                         break;
                     case "R":
-                        list += possibleR(x, y);
+                        list += possibleR(r, c);
                         break;
                     case "K":
-                        list += possibleK(x, y);
+                        list += possibleK(r, c);
                         break;
                     case "B":
-                        list += possibleB(x, y);
+                        list += possibleB(r, c);
                         break;
                     case "Q":
-                        list += possibleQ(x, y);
+                        list += possibleQ(r, c);
                         break;
                     case "A":
-                        list += possibleA(x, y);
+                        list += possibleA(r, c);
                         break;
                 }
             }
@@ -61,47 +61,79 @@ public class AlphaBetaChess {
         return list;
     }
 
-    public static String possibleP(int x, int y) {
+    public static String possibleP(int r, int c) {
         return "";
     }
 
-    public static String possibleR(int x, int y) {
+    public static String possibleR(int r, int c) {
         return "";
     }
 
-    public static String possibleK(int x, int y) {
+    public static String possibleK(int r, int c) {
         return "";
     }
 
-    public static String possibleB(int x, int y) {
+    public static String possibleB(int r, int c) {
         return "";
     }
 
-    public static String possibleQ(int x, int y) {
-        return "";
-    }
-
-    public static String possibleA(int x, int y) {
+    public static String possibleQ(int r, int c) {
         String list = "";
 
-        for (int x2 = -1; x2 < 2; x2++) {
-            for (int y2 = -1; y2 < 2; y2++) {
-                if (x2 != 0 || y2 != 0) {
+        for (int r2 = -1; r2 <= 1; r2++) {
+            for (int c2 = -1; c2 <= 1; c2++) {
+                if (r2 != 0 || c2 != 0) {
                     try {
-                        String target = board[x + x2][y + y2];
+                        int i = 1;
+                        String target = board[r + (r2 * i)][c + (c2 * i)];
+                        while (target.equals(" ")
+                                || Character.isLowerCase(target.charAt(0))) {
+                            board[r][c] = " ";
+                            board[r + (r2 * i)][c + (c2 * i)] = "Q";
+                            if (isKingSafe()) {
+                                list = list + r + c + (r + (r2 * i)) + (c + (c2 * i)) + target;
+                            }
+                            board[r][c] = "Q";
+                            board[r + (r2 * i)][c + (c2 * i)] = target;
+
+                            if (Character.isLowerCase(target.charAt(0))) {
+                                break;
+                            } else {
+                                i++;
+                                target = board[r + (r2 * i)][c + (c2 * i)];
+                            }
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        continue;
+                    }
+                }
+            }
+        }
+
+        return list;
+    }
+
+    public static String possibleA(int r, int c) {
+        String list = "";
+
+        for (int r2 = -1; r2 <= 1; r2++) {
+            for (int c2 = -1; c2 <= 1; c2++) {
+                if (r2 != 0 || c2 != 0) {
+                    try {
+                        String target = board[r + r2][c + c2];
                         if (Character.isLowerCase(target.charAt(0))
                                 || target.equals(" ")) {
-                            board[x][y] = " ";
-                            board[x + x2][y + y2] = "A";
-                            cKingPositionX = x + x2;
-                            cKingPositionY = y + y2;
+                            board[r][c] = " ";
+                            board[r + r2][c + c2] = "A";
+                            cKingPositionR = r + r2;
+                            cKingPositionC = c + c2;
                             if (isKingSafe()) {
-                                list = list + x + y + (x + x2) + (y + y2) + target;
+                                list = list + r + c + (r + r2) + (c + c2) + target;
                             }
-                            board[x][y] = "A";
-                            board[x + x2][y + y2] = target;
-                            cKingPositionX = x;
-                            cKingPositionY = y;
+                            board[r][c] = "A";
+                            board[r + r2][c + c2] = target;
+                            cKingPositionR = r;
+                            cKingPositionC = c;
                         }
                     } catch (IndexOutOfBoundsException e) {
                         continue;
