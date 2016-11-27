@@ -12,10 +12,10 @@ public class AlphaBetaChess {
             {"p","p","p","p","p","p","p","p"},
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
-            {" "," "," "," ","Q"," "," "," "},
-            {" "," "," "," "," "," "," "," "},
-            {"P","P","P","P","P","P","P","P"},
-            {"R","K","B","Q","A","B","K","R"}};
+            {"P"," "," "," "," "," "," "," "},
+            {" "," ","K"," "," "," "," "," "},
+            {" ","P","P","P","P","P","P","P"},
+            {"R"," ","B","Q","A","B","K","R"}};
 
     private static int cKingPositionR;
     private static int cKingPositionC;
@@ -66,7 +66,39 @@ public class AlphaBetaChess {
     }
 
     public static String possibleR(int r, int c) {
-        return "";
+        String list = "";
+
+        for (int r2 = -1; r2 <= 1; r2++) {
+            for (int c2 = -1; c2 <= 1; c2++) {
+                if (r2 == 0 ^ c2 == 0) {
+                    try {
+                        int i = 1;
+                        String target = board[r + (r2 * i)][c + (c2 * i)];
+                        while (target.equals(" ")
+                                || Character.isLowerCase(target.charAt(0))) {
+                            board[r][c] = " ";
+                            board[r + (r2 * i)][c + (c2 * i)] = "R";
+                            if (isKingSafe()) {
+                                list = list + r + c + (r + (r2 * i)) + (c + (c2 * i)) + target;
+                            }
+                            board[r][c] = "R";
+                            board[r + (r2 * i)][c + (c2 * i)] = target;
+
+                            if (Character.isLowerCase(target.charAt(0))) {
+                                break;
+                            } else {
+                                i++;
+                                target = board[r + (r2 * i)][c + (c2 * i)];
+                            }
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        continue;
+                    }
+                }
+            }
+        }
+
+        return list;
     }
 
     public static String possibleK(int r, int c) {
@@ -74,7 +106,39 @@ public class AlphaBetaChess {
     }
 
     public static String possibleB(int r, int c) {
-        return "";
+        String list = "";
+
+        for (int r2 = -1; r2 <= 1; r2++) {
+            for (int c2 = -1; c2 <= 1; c2++) {
+                if (r2 != 0 && c2 != 0) {
+                    try {
+                        int i = 1;
+                        String target = board[r + (r2 * i)][c + (c2 * i)];
+                        while (target.equals(" ")
+                                || Character.isLowerCase(target.charAt(0))) {
+                            board[r][c] = " ";
+                            board[r + (r2 * i)][c + (c2 * i)] = "B";
+                            if (isKingSafe()) {
+                                list = list + r + c + (r + (r2 * i)) + (c + (c2 * i)) + target;
+                            }
+                            board[r][c] = "B";
+                            board[r + (r2 * i)][c + (c2 * i)] = target;
+
+                            if (Character.isLowerCase(target.charAt(0))) {
+                                break;
+                            } else {
+                                i++;
+                                target = board[r + (r2 * i)][c + (c2 * i)];
+                            }
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        continue;
+                    }
+                }
+            }
+        }
+
+        return list;
     }
 
     public static String possibleQ(int r, int c) {
