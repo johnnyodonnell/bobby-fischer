@@ -12,9 +12,9 @@ public class AlphaBetaChess {
             {"p","p","p","p","p","p","p","p"},
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
-            {"P"," "," "," "," "," "," "," "},
+            {" "," "," "," "," "," "," "," "},
             {" "," ","K"," "," "," "," "," "},
-            {" ","P","P","P","P","P","P","P"},
+            {"P","P","P","P","P","P","P","P"},
             {"R"," ","B","Q","A","B","K","R"}};
 
     private static int cKingPositionR;
@@ -102,7 +102,42 @@ public class AlphaBetaChess {
     }
 
     public static String possibleK(int r, int c) {
-        return "";
+        String list = "";
+
+        for (int r2 = -1; r2 <= 1; r2++) {
+            for (int c2 = -1; c2 <= 1; c2++) {
+                if (r2 != 0 && c2 != 0) {
+                    try {
+                        String target = board[r + r2][c + (c2 * 2)];
+                        if (target.equals(" ")
+                                || Character.isLowerCase(target.charAt(0))) {
+                            board[r][c] = " ";
+                            board[r + r2][c + (c2 * 2)] = "K";
+                            if (isKingSafe()) {
+                                list = list + r + c + (r + r2) + (c + (c2 * 2)) + target;
+                            }
+                            board[r][c] = "K";
+                            board[r + r2][c + (c2 * 2)] = target;
+                        }
+                    } catch (IndexOutOfBoundsException e) {}
+                    try {
+                        String target = board[r + (r2 * 2)][c + c2];
+                        if (target.equals(" ")
+                                || Character.isLowerCase(target.charAt(0))) {
+                            board[r][c] = " ";
+                            board[r + (r2 * 2)][c + c2] = "K";
+                            if (isKingSafe()) {
+                                list = list + r + c + (r + (r2 * 2)) + (c + c2) + target;
+                            }
+                            board[r][c] = "K";
+                            board[r + (r2 * 2)][c + c2] = target;
+                        }
+                    } catch (IndexOutOfBoundsException e) {}
+                }
+            }
+        }
+
+        return list;
     }
 
     public static String possibleB(int r, int c) {
