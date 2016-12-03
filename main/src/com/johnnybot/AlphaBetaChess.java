@@ -13,12 +13,12 @@ public class AlphaBetaChess {
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
-            {" "," ","K"," "," "," "," "," "},
+            {" "," "," "," "," "," "," "," "},
             {"P","P","P","P","P","P","P","P"},
-            {"R"," ","B","Q","A","B","K","R"}};
+            {"R","K","B","Q","A","B","K","R"}};
 
-    private static int cKingPositionR;
-    private static int cKingPositionC;
+    private static int cKingPositionR = 7;
+    private static int cKingPositionC = 4;
 
     private static int lKingPositionR;
     private static int lKingPositionC;
@@ -245,6 +245,25 @@ public class AlphaBetaChess {
     }
 
     public static boolean isKingSafe() {
+        for (int r = -1; r <= 1; r++) {
+            for (int c = -1; c <= 1; c++) {
+                try {
+                    int i = 1;
+                    String target;
+                    do {
+                        target = board[cKingPositionR + (r * i)]
+                                [cKingPositionC + (c * i)];
+                        if ("qbr".contains(target)) {
+                            return false;
+                        } else {
+                            i++;
+                        }
+                    } while (target.equals(" "));
+                } catch (IndexOutOfBoundsException e) {
+                    continue;
+                }
+            }
+        }
         return true;
     }
 }
