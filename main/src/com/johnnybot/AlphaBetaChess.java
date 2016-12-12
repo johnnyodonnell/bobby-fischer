@@ -13,11 +13,11 @@ public class AlphaBetaChess {
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
-            {" "," "," "," ","A"," "," "," "},
+            {" "," "," "," "," "," "," "," "},
             {"P","P","P","P","P","P","P","P"},
-            {"R","K","B","Q"," ","B","K","R"}};
+            {"R","K","B","Q","A","B","K","R"}};
 
-    private static int cKingPositionR = 5;
+    private static int cKingPositionR = 7;
     private static int cKingPositionC = 4;
 
     private static int lKingPositionR;
@@ -62,7 +62,37 @@ public class AlphaBetaChess {
     }
 
     public static String possibleP(int r, int c) {
-        return "";
+        String list = "";
+
+        int r2 = -1;
+        for (int c2 = -1; c2 <= 1; c2++) {
+            try {
+                String target = board[r + r2][c + c2];
+                if (Math.abs(c2) == 1
+                        && Character.isLowerCase(target.charAt(0))) {
+                    board[r][c] = " ";
+                    if (r + r2 == 0) {
+                        board[r + r2][c + c2] = "Q";
+                        if (isKingSafe()) {
+                            list = list + c + (c + c2) + target + "QP";
+                        }
+                    } else {
+                        board[r + r2][c + c2] = "P";
+                        if (isKingSafe()) {
+                            list = list + r + c + (r + r2) + (c + c2) + target;
+                        }
+                    }
+                    board[r][c] = "P";
+                    board[r + r2][c + c2] = target;
+                } else {
+                    
+                }
+            } catch (IndexOutOfBoundsException e) {
+                continue;
+            }
+        }
+
+        return list;
     }
 
     public static String possibleR(int r, int c) {
