@@ -64,16 +64,22 @@ public class AlphaBetaChess {
     public static String possibleP(int r, int c) {
         String list = "";
 
-        int r2 = -1;
+        int r2;
         for (int c2 = -1; c2 <= 1; c2++) {
             try {
+                /* Try moving up 1 space */
+                r2 = -1;
                 String target = board[r + r2][c + c2];
-                if (Math.abs(c2) == 1
-                        && Character.isLowerCase(target.charAt(0))) {
+                if ((Math.abs(c2) == 1
+                        && Character.isLowerCase(target.charAt(0)))
+                        || (c2 == 0 && target.equals(" "))) {
                     board[r][c] = " ";
-                    if (r + r2 == 0) {
+                    /* If on row 1, then promote to Q */
+                    if (r == 1) {
                         board[r + r2][c + c2] = "Q";
                         if (isKingSafe()) {
+                            /* column1, column2, captured piece,
+                               new piece, promotion */
                             list = list + c + (c + c2) + target + "QP";
                         }
                     } else {
@@ -84,8 +90,19 @@ public class AlphaBetaChess {
                     }
                     board[r][c] = "P";
                     board[r + r2][c + c2] = target;
-                } else {
-                    
+                }
+                /* Try moving up 2 spaces */
+                r2 = -2;
+                String target2 = board[r + r2][c + c2];
+                if (c2 == 0 && r == 6 && target.equals(" ")
+                        && target2.equals(" ")) {
+                    board[r][c] = " ";
+                    board[r + r2][c + c2] = "P";
+                    if (isKingSafe()) {
+                        list = list + r + c + (r + r2) + (c + c2) + target2;
+                    }
+                    board[r][c] = "P";
+                    board[r + r2][c + c2] = target2;
                 }
             } catch (IndexOutOfBoundsException e) {
                 continue;
