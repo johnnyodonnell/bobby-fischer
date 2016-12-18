@@ -1,6 +1,7 @@
 package com.johnnybot;
 
 import javax.swing.JFrame;
+import java.util.Arrays;
 
 /**
  * Created by kingod180 on 11/24/2016.
@@ -13,7 +14,7 @@ public class AlphaBetaChess {
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
             {" "," "," "," "," "," "," "," "},
-            {" "," "," "," "," "," "," "," "},
+            {" "," ","p"," "," "," "," "," "},
             {"P","P","P","P","P","P","P","P"},
             {"R","K","B","Q","A","B","K","R"}};
 
@@ -29,7 +30,61 @@ public class AlphaBetaChess {
         jFrame.add(new UserInterface());
         jFrame.setSize(500, 500);
 //        jFrame.setVisible(true);
-        System.out.println(possibleMoves());
+        printBoard();
+        doMove("7152p");
+        printBoard();
+        undoMove("7152p");
+        printBoard();
+    }
+
+    public static void printBoard() {
+        System.out.println("--- Chess Board ---");
+        Arrays.stream(board)
+                .forEachOrdered(r -> System.out.println(Arrays.toString(r)));
+        System.out.println();
+    }
+
+    public static void doMove(String move) {
+        if (move.charAt(4) == 'P') {
+            /* column1, column2, captured piece,
+               new piece, promotion */
+            int c1 = Character.getNumericValue(move.charAt(0));
+            int c2 = Character.getNumericValue(move.charAt(1));
+            String newPiece = String.valueOf(move.charAt(3));
+
+            board[1][c1] = " ";
+            board[0][c2] = newPiece;
+        } else {
+            int r1 = Character.getNumericValue(move.charAt(0));
+            int c1 = Character.getNumericValue(move.charAt(1));
+            int r2 = Character.getNumericValue(move.charAt(2));
+            int c2 = Character.getNumericValue(move.charAt(3));
+
+            board[r2][c2] = board[r1][c1];
+            board[r1][c1] = " ";
+        }
+    }
+
+    public static void undoMove(String move) {
+        if (move.charAt(4) == 'P') {
+            /* column1, column2, captured piece,
+               new piece, promotion */
+            int c1 = Character.getNumericValue(move.charAt(0));
+            int c2 = Character.getNumericValue(move.charAt(1));
+            String capturedPiece = String.valueOf(move.charAt(2));
+
+            board[1][c1] = "p";
+            board[0][c2] = capturedPiece;
+        } else {
+            int r1 = Character.getNumericValue(move.charAt(0));
+            int c1 = Character.getNumericValue(move.charAt(1));
+            int r2 = Character.getNumericValue(move.charAt(2));
+            int c2 = Character.getNumericValue(move.charAt(3));
+            String capturedPiece = String.valueOf(move.charAt(4));
+
+            board[r1][c1] = board[r2][c2];
+            board[r2][c2] = capturedPiece;
+        }
     }
 
     public static String possibleMoves() {
